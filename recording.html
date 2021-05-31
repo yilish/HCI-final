@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<!-- saved from url=(0096)http://localhost:63342/final_project/HTML/speech_recog_demo.html?_ijt=6l4f83becok5j3p80j34iqgjih -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>audio record</title>
+</head>
+<body>
+<div class="app">
+    <button class="record-btn" onclick="fun()">record</button>
+    <audio controls="" class="audio-player" id="aud"></audio>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+<!--<script src="../../../../Documents/audio%20record_files/speechkitt.min.js"></script>-->
+
+<script>
+    var i = 0;
+    if (annyang) {
+        // Let's define a command.
+        // const commands = {
+        //     'hello': () => { alert('Hello world!'); },
+        //     'bye': () => {alert('goodbye!'); }
+        // };
+        annyang.setLanguage('zh-CN');
+        annyang.addCallback('soundstart', function() {
+            console.log('sound detected');
+        });
+        annyang.addCallback('result', function(phrases) {
+            console.log('Speech recognized. Possible sentences said:');
+            console.log(phrases);
+
+            // Todo: 加入返回值的逻辑
+        });
+        // Add our commands to annyang
+        // annyang.addCommands(commands);
+
+        // Start listening.
+        // annyang.start();
+    }
+    function fun() {
+
+
+    }
+</script>
+<script src="js/require.js"></script>
+<script src="js/recorder.js"></script>
+<!--<script></script>-->
+
+</body></html>
