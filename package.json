@@ -4,10 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "vue-cli": "^2.9.6"
+  }
 }
