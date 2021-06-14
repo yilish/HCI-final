@@ -9,7 +9,7 @@ yarn-debug.log*
 yarn-error.log*
 dist/
 backup/
-build/
+
 
 .DS_Store
 node_modules
