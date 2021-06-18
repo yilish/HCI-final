@@ -1,6 +1,13 @@
+
+var isPhone = 0;
+// var checkPhone = 0;
+var isSms = 0;
+var getSmsContent = 0;
+// var getSmsPhone = 0;
+var smsContent = "";
 if (annyang) {
 
-    // annyang.setLanguage('zh-CN');
+    annyang.setLanguage('zh-CN');
     console.log('ASR systeme has successfully launched!');
     annyang.addCallback('soundstart', function () {
         console.log('sound detected');
@@ -8,8 +15,71 @@ if (annyang) {
     annyang.addCallback('result', function (phrases) {
         console.log('Speech recognized. Possible sentences said:');
         console.log(phrases);
-        chat(phrases)
+        if (isPhone === 1) {
+            try {
+                // var phoneNum = parseInt(phrases[0]);
 
+                window.location.href = "tel:" + phrases[0];
+                // isPhone = 0;
+                toVoice('好的，为您拨打' + phrases[0]);
+            }
+            catch {
+                toVoice('抱歉，能再说一次');
+
+            }
+            // ToDo: 加入打电话逻辑
+            return;
+        }
+        else if (isSms === 1) {
+            if (getSmsContent === 0) {
+                smsContent = phrases[0];
+                toVoice('发送' + smsContent + '。请说出电话号码');
+                getSmsContent = 1;
+                return;
+            }
+            else {
+                try {
+                    window.location.href = 'sms:' + phrases[0] + '?body=' + smsContent;
+                    toVoice('发送' + smsContent + '到' + phrases[0]);
+
+                }
+                catch {
+                    toVoice('没有听清电话号码，可以再说一次吗?');
+                }
+            }
+        }
+        if (phrases[0].indexOf('电话') !== -1) {
+
+            isPhone = 1;
+            // 屏幕打出：请说出电话号码
+            toVoice('请说出电话号码');
+            return;
+        }
+        else if (phrases[0].indexOf('短信') !== -1) {
+            isSms = 1;
+            toVoice('请说出短信内容');
+        }
+
+        else if (phrases[0].indexOf('天气') !== -1) {
+            var obj = new Object();
+            var settings = {
+                "url": "https://devapi.qweather.com/v7/weather/3d?location=101020500&key=4d8469f5fc0249b5b04528280d5cff3e",
+                "method": "GET",
+                "timeout": 0,
+            };
+
+            $.ajax(settings).done(function (response) {
+                console.log(response);
+                obj = response;
+            });
+
+            toVoice('今日天气: 最高温度' + obj.daily[0].tmpMax + '，最低温度' + obj.daily[0].tmpMin
+                    + '，日间天气: ' + obj.daily[0].textDay + '，夜间天气: ' + obj.daily[0].textNight);
+            return ;
+        }
+       
+        chat(phrases);
+        // reactTo(phrases[0]);
         // Todo: 加入返回值的逻辑
     });
     annyang.pause();
@@ -21,7 +91,14 @@ if (annyang) {
     // annyang.start();
 }
 var targetColor = '#ff8f6b';
+// function reactTo(sentence) {
+//     // if (sentence.contains)
+//     if (sentence.indexOf('电话') != -1) {
+//
+//     }
+// }
 
+// function makePhoneCall
 // rgb to hex
 function rgbToHex(r, g, b) {
     var hex = ((r << 16) | (g << 8) | b).toString(16);
