@@ -1,32 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<meta charset="utf-8">
-	<title>Audio Example</title>
-
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<script src="https://imgcache.qq.com/open/qcloud/soe/TencentSOE-0.0.1.js"></script>
 </head>
 <body>
-<div class="app">
-	<button class="record-btn"></button>
-	<audio controls="" class="audio-player" id="aud"></audio>
-	<button onclick="seeAudio()">看看网页</button>
-	<button onclick="changeButton()">改下按钮</button>
-</div>
+<input type="text" value="about" id="word">
+<button id="start" onclick="start()">开始录音</button>
+<button id="stop" onclick="end()">结束录音</button>
+<!-- 显示当前状态 -->
+<span id="status"></span>
+<!-- 显示测评结果 -->
+<div id="result"></div>
 </body>
-<script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
-<!--<script src="../../../../Documents/audio%20record_files/speechkitt.min.js"></script>-->
-
 <script>
-	function seeAudio() {
-		console.log(document.getElementById('aud'))
-		console.log(document.getElementById('aud').src)
+	let recorder = new TencentSOE({
+		InitUrl: 'http://127.0.0.1:3000/cgi/init',
+		TransUrl: 'http://127.0.0.1:3000/cgi/trans',
+		success(res) {
+			console.log('创建成功');
+		},
+		error(err) {
+			console.log('创建失败');
+		},
+	});
+	
+	function start() {
+		result.innerHTML = '';
+		status.textContent = '初始化中';
+		recorder.init({
+			RefText: word.value,
+			success(res) {
+				status.textContent = '录音转码中...';
+				recorder.start();
+			},
+			error(err) {
+				console.log('err', err);
+			}
+		});
 	}
 	
-	function changeButton() {
-		
-		console.log(navigator.mediaDevices)
-		
+	function end() {
+		recorder.stop({
+			success(res) {
+				status.textContent = '已结束';
+				createAudioLinkFromBlob(res, 'wav');
+			},
+			error(err) {
+				console.log('err', err);
+			}
+		});
 	}
+	
+	function createAudioLinkFromBlob(res, type) {
+		let audio = document.createElement('audio');
+		let alink = document.createElement('a');
+		let score = document.createElement('span');
+		let blobUrl = URL.createObjectURL(res.blob);
+		alink.download = 'demo.' + type;
+		alink.textContent = 'demo.' + type;
+		alink.href = blobUrl;
+		audio.src = blobUrl;
+		audio.setAttribute('controls', '');
+		score.textContent = '分数：' + res.PronAccuracy;
+		
+		let container = document.createElement('div');
+		container.appendChild(audio);
+		container.appendChild(alink);
+		container.appendChild(score);
+		result.appendChild(container);
+	}
+
 </script>
-<script src="js/recorder.js"></script>
 </html>

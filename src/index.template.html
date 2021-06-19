@@ -12,15 +12,14 @@
 <!-- partial:index.partial.html -->
 <div id="world">
 	
-	<h1>Hello! How can I help?</h1>
-	<h2>Talk with me by saying "Hi,The shy"</h2>
+	<h1 id="response">Hello! How can I help?</h1>
+	<h2 id="userSay">Talk with me by saying "Hi,The shy"</h2>
 	<div id="listen"></div>
-	<button onclick="randomMusic()">hhh</button>
 </div>
 <div class="app">
-	<button class="record-btn">录音</button>
+	<button class="record-btn" onclick="func()">录音</button>
 	<audio controls="" class="audio-player" id="aud"></audio>
-	<button onclick="seeAudio()">看看网页</button>
+	<button onclick="seeBase64()">看看网页</button>
 </div>
 
 <!-- My new preferred choice... this method doesn't need a <span>. Source: https://css-tricks.com/forums/topic/css-trick-for-a-horizontal-type-line-behind-text/#post-132492 -->
@@ -32,28 +31,10 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
 <script src="https://code.jquery.com/jquery-latest.js"></script>
 <script src="function/randomMusic.js"></script>
+<script src="function/chat.js"></script>
 <script src="asr.js"></script>
 <script src="function/recorder.js"></script>
 
 </body>
-<script>
-	function seeAudio() {
-		console.log(document.getElementById('aud').src)
-		fetch(document.getElementById('aud').src).then(data=>{
-			const blob = data.blob()
-			return blob;
-		}).then(blob=>{
-			let reader = new window.FileReader()
-			reader.onloadend = function() {
-				const data = reader.result
-				console.log('视频base64地址：',data)
-			}
-			reader.readAsDataURL(blob)
-		})
 
-	}
-	
-
-
-</script>
 </html>

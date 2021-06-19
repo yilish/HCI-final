@@ -4,21 +4,27 @@ var isSms = 0;
 var getSmsContent = 0;
 // var getSmsPhone = 0;
 var smsContent = "";
+let isStop = true
+let isMusic = 0
+let musicName
+let isGuess = 0
 if (annyang) {
 
     annyang.setLanguage('zh-CN');
     console.log('ASR systeme has successfully launched!');
     annyang.addCallback('soundstart', function () {
+        if (isStop) {
+            audioControl()
+            isStop = false
+        }
         console.log('sound detected');
     });
-    annyang.addCallback('end',function (userSaid) {
-        console.log('说完了')
-        console.log(userSaid)
-    })
     annyang.addCallback('result', function (phrases) {
+        isStop = true
         console.log('Speech recognized. Possible sentences said:');
         console.log(phrases);
-        document.getElementById('userSay').innerText = '您说了：'+ phrases[0]
+        audioControl()
+        document.getElementById('userSay').innerHTML = '您说了：' + phrases[0]
         if (isPhone === 1) {
             try {
                 // var phoneNum = parseInt(phrases[0]);
@@ -32,6 +38,20 @@ if (annyang) {
             }
             // ToDo: 加入打电话逻辑
             return;
+        } else if (isMusic === 1) {
+            if (phrases[0].indexOf('猜歌名') !== -1) {
+                toVoice('猜猜刚刚放了什么歌')
+                isGuess = 1
+            } else {
+                chat(phrases[0])
+            }
+            isMusic = 0
+        } else if (isGuess === 1) {
+            if (phrases[0] === musicName) {
+                toVoice('恭喜你猜对了')
+            } else {
+                toVoice('很遗憾，你猜错了。正确答案是' + musicName)
+            }
         } else if (isSms === 1) {
             if (getSmsContent === 0) {
                 smsContent = phrases[0];
@@ -47,8 +67,7 @@ if (annyang) {
                     toVoice('没有听清电话号码，可以再说一次吗?');
                 }
             }
-        }
-        else if (phrases[0].indexOf('电话') !== -1) {
+        } else if (phrases[0].indexOf('电话') !== -1) {
 
             isPhone = 1;
             // 屏幕打出：请说出电话号码
@@ -73,12 +92,11 @@ if (annyang) {
             toVoice('今日天气: 最高温度' + obj.daily[0].tmpMax + '，最低温度' + obj.daily[0].tmpMin
                 + '，日间天气: ' + obj.daily[0].textDay + '，夜间天气: ' + obj.daily[0].textNight);
             return;
-        }
-        else if (phrases[0].indexOf('听音乐') !== -1 || phrases[0].indexOf('来点音乐') !== -1){
+        } else if (phrases[0].indexOf('听音乐') !== -1 || phrases[0].indexOf('来点音乐') !== -1) {
             randomMusic()
-        }
-        else {
-            chat(phrases);
+            isMusic = 1
+        } else {
+            chat(phrases[0]);
         }
         // reactTo(phrases[0]);
         // Todo: 加入返回值的逻辑
@@ -196,68 +214,6 @@ function changeColor() {
 }
 
 
-var i = 0;
-const constraints = {audio: true};
-if (navigator.mediaDevices.getUserMedia) {
-
-    navigator.mediaDevices.getUserMedia(constraints).then(
-        stream => {
-
-            console.log("授权成功！");
-            const recordBtn = document.body;
-            const mediaRecorder = new MediaRecorder(stream);
-
-            recordBtn.onclick = () => {
-                console.log('1');
-
-                if (mediaRecorder.state === "recording") {
-                    mediaRecorder.stop();
-                    // annyang.abort();
-                    //recordBtn.textContent = "record";
-                    console.log("录音结束");
-                } else {
-                    mediaRecorder.start();
-                    annyang.resume();
-                    console.log("录音中...");
-                    //recordBtn.textContent = "stop";
-                }
-                console.log("录音器状态：", mediaRecorder.state);
-            };
-
-            const chunks = [];
-            mediaRecorder.ondataavailable = function (e) {
-                chunks.push(e.data);
-                console.log('data')
-                console.log(e.data);
-            };
-
-            mediaRecorder.onstop = e => {
-                var blob = new Blob(chunks, {type: "audio/wav; codecs=opus"});
-                console.log(blob.size)
-                console.log('dasdsadjasoidjo')
-                console.log(blob)
-                // console.log(blob.arrayBuffer());
-                // chunks = [];
-                var audioURL = window.URL.createObjectURL(blob);
-                var audio = document.getElementById('aud');
-                audio.src = audioURL;
-                // console.log(audioURL);
-                // console.log(audioURL);
-                var reader = new FileReader();
-                reader.onloadend = () => {
-
-                }
-
-                reader.readAsDataURL(blob);
-            };
-        },
-        () => {
-            console.error("授权失败！");
-        }
-    );
-} else {
-    console.error("浏览器不支持 getUserMedia");
-}
 function testCanvasOnClick() {
     try {
         if (i++ % 2 === 0) {
@@ -280,3 +236,18 @@ function testCanvasOnClick() {
     }
 }
 
+function seeBase64() {
+    console.log(document.getElementById('aud').src)
+    fetch(document.getElementById('aud').src).then(data => {
+        const blob = data.blob()
+        return blob;
+    }).then(blob => {
+        let reader = new window.FileReader()
+        reader.onloadend = function () {
+            const data = reader.result
+            console.log('视频base64地址：', data)
+        }
+        reader.readAsDataURL(blob)
+    })
+    return data
+}

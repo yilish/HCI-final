@@ -26,6 +26,6 @@ function toVoice(text) {
     document.getElementById('listen').innerHTML = "<audio autoplay=\"autoplay\">" +
         "<source src=\"http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=7&text=" + zhText + "\" type=\"audio/mpeg\">" +
         "</audio>"
-    document.getElementById('response').innerText = text
+    document.getElementById('response').innerHTML = text
 
 }
