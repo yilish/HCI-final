@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Audio Example</title>
+
+</head>
+<body>
+<div class="app">
+	<button class="record-btn"></button>
+	<audio controls="" class="audio-player" id="aud"></audio>
+	<button onclick="seeAudio()">看看网页</button>
+	<button onclick="changeButton()">改下按钮</button>
+</div>
+</body>
+<script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+<!--<script src="../../../../Documents/audio%20record_files/speechkitt.min.js"></script>-->
+
+<script>
+	function seeAudio() {
+		console.log(document.getElementById('aud'))
+		console.log(document.getElementById('aud').src)
+	}
+	
+	function changeButton() {
+		
+		console.log(navigator.mediaDevices)
+		
+	}
+</script>
+<script src="js/recorder.js"></script>
+</html>

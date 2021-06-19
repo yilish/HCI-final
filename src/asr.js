@@ -1,4 +1,3 @@
-
 var isPhone = 0;
 // var checkPhone = 0;
 var isSms = 0;
@@ -12,9 +11,14 @@ if (annyang) {
     annyang.addCallback('soundstart', function () {
         console.log('sound detected');
     });
+    annyang.addCallback('end',function (userSaid) {
+        console.log('说完了')
+        console.log(userSaid)
+    })
     annyang.addCallback('result', function (phrases) {
         console.log('Speech recognized. Possible sentences said:');
         console.log(phrases);
+        document.getElementById('userSay').innerText = '您说了：'+ phrases[0]
         if (isPhone === 1) {
             try {
                 // var phoneNum = parseInt(phrases[0]);
@@ -22,46 +26,39 @@ if (annyang) {
                 window.location.href = "tel:" + phrases[0];
                 // isPhone = 0;
                 toVoice('好的，为您拨打' + phrases[0]);
-            }
-            catch {
+            } catch {
                 toVoice('抱歉，能再说一次');
 
             }
             // ToDo: 加入打电话逻辑
             return;
-        }
-        else if (isSms === 1) {
+        } else if (isSms === 1) {
             if (getSmsContent === 0) {
                 smsContent = phrases[0];
                 toVoice('发送' + smsContent + '。请说出电话号码');
                 getSmsContent = 1;
                 return;
-            }
-            else {
+            } else {
                 try {
                     window.location.href = 'sms:' + phrases[0] + '?body=' + smsContent;
                     toVoice('发送' + smsContent + '到' + phrases[0]);
 
-                }
-                catch {
+                } catch {
                     toVoice('没有听清电话号码，可以再说一次吗?');
                 }
             }
         }
-        if (phrases[0].indexOf('电话') !== -1) {
+        else if (phrases[0].indexOf('电话') !== -1) {
 
             isPhone = 1;
             // 屏幕打出：请说出电话号码
             toVoice('请说出电话号码');
-            return;
-        }
-        else if (phrases[0].indexOf('短信') !== -1) {
+
+        } else if (phrases[0].indexOf('短信') !== -1) {
             isSms = 1;
             toVoice('请说出短信内容');
-        }
-
-        else if (phrases[0].indexOf('天气') !== -1) {
-            var obj = new Object();
+        } else if (phrases[0].indexOf('天气') !== -1) {
+            var obj = {};
             var settings = {
                 "url": "https://devapi.qweather.com/v7/weather/3d?location=101020500&key=4d8469f5fc0249b5b04528280d5cff3e",
                 "method": "GET",
@@ -74,11 +71,15 @@ if (annyang) {
             });
 
             toVoice('今日天气: 最高温度' + obj.daily[0].tmpMax + '，最低温度' + obj.daily[0].tmpMin
-                    + '，日间天气: ' + obj.daily[0].textDay + '，夜间天气: ' + obj.daily[0].textNight);
-            return ;
+                + '，日间天气: ' + obj.daily[0].textDay + '，夜间天气: ' + obj.daily[0].textNight);
+            return;
         }
-       
-        chat(phrases);
+        else if (phrases[0].indexOf('听音乐') !== -1 || phrases[0].indexOf('来点音乐') !== -1){
+            randomMusic()
+        }
+        else {
+            chat(phrases);
+        }
         // reactTo(phrases[0]);
         // Todo: 加入返回值的逻辑
     });
@@ -219,45 +220,3 @@ function testCanvasOnClick() {
     }
 }
 
-function chat(text) {
-    var obj = {
-        "perception": {
-            "inputText": {
-                "text": "你好"
-            }
-        },
-        "userInfo": {
-            "apiKey": "7bb5c24488504ac699f18360918ff8cd",
-            "userId": "716064"
-        },
-
-    }
-    $.ajax({
-        type: "get",
-        url: "http://www.tuling123.com/openapi/api",
-        dataType: "JSON",
-        jsonP: "callback",
-        data: {
-            'key': '7bb5c24488504ac699f18360918ff8cd',
-            'info': text,
-            'userid': '716064'
-        },
-        success: function (str) {
-            console.log('emm')
-            toVoice(str.text)
-        },
-        error: function (str) {
-        }
-    });
-}
-
-function toVoice(text) {
-    var zhText = text;
-    zhText = encodeURI(zhText);
-    console.log(zhText)
-
-    document.getElementById('listen').innerHTML = "<audio autoplay=\"autoplay\">" +
-        "<source src=\"http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=7&text=" + zhText + "\" type=\"audio/mpeg\">" +
-        "</audio>"
-
-}
