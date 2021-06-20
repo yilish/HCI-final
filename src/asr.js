@@ -10,12 +10,21 @@ if (annyang) {
     console.log('ASR systeme has successfully launched!');
     annyang.addCallback('soundstart', function () {
         console.log('sound detected');
+        if (mediaRecorder.state !== 'recording')
+        {mediaRecorder.start();}
+        console.log('录音中..');
+        console.log("录音器状态：", mediaRecorder.state);
+        changeColor();
     });
-    annyang.addCallback('end',function (userSaid) {
-        console.log('说完了')
-        console.log(userSaid)
-    })
+    // annyang.addCallback('end',function (userSaid) {
+    //     console.log('说完了')
+    //     console.log(userSaid)
+    // })
     annyang.addCallback('result', function (phrases) {
+        changeColor();
+        if (mediaRecorder.state === 'recording')
+        {mediaRecorder.stop();}
+        console.log("录音结束");
         console.log('Speech recognized. Possible sentences said:');
         console.log(phrases);
         document.getElementById('userSay').innerText = '您说了：'+ phrases[0]
@@ -83,7 +92,8 @@ if (annyang) {
         // reactTo(phrases[0]);
         // Todo: 加入返回值的逻辑
     });
-    annyang.pause();
+    // annyang.pause();
+    annyang.start();
     console.log(annyang.isListening());
     // Add our commands to annyang
     // annyang.addCommands(commands);
@@ -198,6 +208,7 @@ function changeColor() {
 
 var i = 0;
 const constraints = {audio: true};
+var mediaRecorder = {};
 if (navigator.mediaDevices.getUserMedia) {
 
     navigator.mediaDevices.getUserMedia(constraints).then(
@@ -205,62 +216,45 @@ if (navigator.mediaDevices.getUserMedia) {
 
             console.log("授权成功！");
             const recordBtn = document.body;
-            const mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder = new MediaRecorder(stream);
 
             recordBtn.onclick = () => {
-                console.log('1');
 
-                if (mediaRecorder.state === "recording") {
-                    mediaRecorder.stop();
-                    // annyang.abort();
-                    //recordBtn.textContent = "record";
-                    console.log("录音结束");
-                } else {
-                    mediaRecorder.start();
-                    annyang.resume();
-                    console.log("录音中...");
-                    //recordBtn.textContent = "stop";
-                }
-                console.log("录音器状态：", mediaRecorder.state);
-            };
 
-            const chunks = [];
-            mediaRecorder.ondataavailable = function (e) {
-                chunks.push(e.data);
-                console.log('data')
-                console.log(e.data);
-            };
+                const chunks = [];
+                mediaRecorder.ondataavailable = function (e) {
+                    chunks.push(e.data);
+                    console.log('data')
+                    console.log(e.data);
+                };
 
-            mediaRecorder.onstop = e => {
-                var blob = new Blob(chunks, {type: "audio/wav; codecs=opus"});
-                console.log(blob.size)
-                console.log('dasdsadjasoidjo')
-                console.log(blob)
-                // console.log(blob.arrayBuffer());
-                // chunks = [];
-                var audioURL = window.URL.createObjectURL(blob);
-                var audio = document.getElementById('aud');
-                audio.src = audioURL;
-                // console.log(audioURL);
-                // console.log(audioURL);
-                var reader = new FileReader();
-                reader.onloadend = () => {
+                mediaRecorder.onstop = e => {
+                    var blob = new Blob(chunks, {type: "audio/wav; codecs=opus"});
+                    console.log(blob.size)
+                    console.log('dasdsadjasoidjo')
+                    console.log(blob)
+                    // console.log(blob.arrayBuffer());
+                    // chunks = [];
+                    var audioURL = window.URL.createObjectURL(blob);
+                    var audio = document.getElementById('aud');
+                    audio.src = audioURL;
+                    // console.log(audioURL);
+                    // console.log(audioURL);
+                    var reader = new FileReader();
+                    reader.onloadend = () => {
 
-                }
+                    }
 
-                reader.readAsDataURL(blob);
-            };
-        },
-        () => {
-            console.error("授权失败！");
-        }
-    );
-} else {
-    console.error("浏览器不支持 getUserMedia");
+                    reader.readAsDataURL(blob);
+                };
+            }
+        });
+
+
 }
-function testCanvasOnClick() {
+function changeStatus() {
     try {
-        if (i++ % 2 === 0) {
+        if (! annyang.isListening()) {
             annyang.resume();
             console.log('Ann yang started listening!');
             console.log(annyang.isListening());
@@ -272,7 +266,21 @@ function testCanvasOnClick() {
         // var targetColor = new THREE.Color();
         // var targetColor ='#ff8f6b';
         // }(,143,107)
-        changeColor();
+        // changeColor();
+        console.log('1');
+
+        if (mediaRecorder.state === "recording") {
+            mediaRecorder.stop();
+            // annyang.abort();
+            //recordBtn.textContent = "record";
+            console.log("录音结束");
+        } else {
+            mediaRecorder.start();
+            // annyang.resume();
+            console.log("录音中...");
+            //recordBtn.textContent = "stop";
+        }
+        console.log("录音器状态：", mediaRecorder.state);
 
     } catch (e) {
         console.log(e);

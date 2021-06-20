@@ -41,9 +41,9 @@ if (navigator.mediaDevices.getUserMedia) {
 
             mediaRecorder.onstop = e => {
                 var blob = new Blob(chunks, {type: "audio/wav; codecs=opus"});
-                console.log(blob.size)
-                console.log('dasdsadjasoidjo')
-                console.log(blob)
+                // console.log(blob.size)
+                // console.log('dasdsadjasoidjo')
+                // console.log(blob)
                 // console.log(blob.arrayBuffer());
                 // chunks = [];
                 var audioURL = window.URL.createObjectURL(blob);
@@ -52,10 +52,7 @@ if (navigator.mediaDevices.getUserMedia) {
                 // console.log(audioURL);
                 // console.log(audioURL);
                 var reader = new FileReader();
-                reader.onloadend = () => {
-
-                }
-
+                
                 reader.readAsDataURL(blob);
             };
         },
