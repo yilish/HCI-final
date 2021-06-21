@@ -8,6 +8,7 @@ function randomMusic() {
         success: function (response) {
             console.log(response);
             let src = response['data']['url']
+            musicName = response['data']['name']
             document.getElementById('listen').innerHTML = "<audio autoplay=\"autoplay\">" +
                 "<source src=" + src + ' type=\"audio/mpeg\">' +
                 "</audio>"
