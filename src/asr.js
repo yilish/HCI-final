@@ -83,7 +83,14 @@ function reactTo(phrase) {
     } else if (phrase.indexOf('听音乐') !== -1 || phrase.indexOf('来点音乐') !== -1) {
         randomMusic()
         isMusic = 1
-    } else {
+    }
+    else if (phrase.indexOf('报时') !== -1) {
+        var myDate = new Date();
+        toVoice('现在是:' + myDate.getFullYear()
+                + '年' + (parseInt(myDate.getUTCMonth()) + 1) + '月' + myDate.getUTCDate() + '日'
+                + myDate.getHours() + '时' + myDate.getMinutes() + '分');
+    }
+    else {
         chat(phrase);
     }
 }
