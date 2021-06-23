@@ -1,14 +1,14 @@
 <div id="world">
 	<input type="text" id="content" name="content" required
-		   minlength="4" maxlength="8" size="10" onchange="reactTo(this.value)">
+		   minlength="4" maxlength="8" size="10" onchange="reactTo(this.value)" >
 	<h1 id="response">Hello! How can I help?</h1>
 	<h2 id="userSay">Talk with me by saying "Hi,The shy"</h2>
 	<div id="listen"></div>
 </div>
 <div class="app">
-	<button class="record-btn" onclick="func()">录音</button>
-	<audio controls="" class="audio-player" id="aud"></audio>
-	<button onclick="seeAudio()">看看网页</button>
+	<button class="record-btn" onclick="func()" style="display: none">录音</button>
+	<audio controls="" class="audio-player" id="aud" style="display: none"></audio>
+	<button onclick="seeAudio()" style="display: none">看看网页</button>
 </div>
 
 <!-- My new preferred choice... this method doesn't need a <span>. Source: https://css-tricks.com/forums/topic/css-trick-for-a-horizontal-type-line-behind-text/#post-132492 -->

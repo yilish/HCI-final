@@ -10,6 +10,7 @@ let musicName
 var curStatus = 'pause';
 let isGuess = 0;
 function reactTo(phrase) {
+    document.getElementById('userSay').innerHTML = '您说了：' + phrase
     if (isPhone === 1) {
         try {
             // var phoneNum = parseInt(phrase);
@@ -24,7 +25,7 @@ function reactTo(phrase) {
         // ToDo: 加入打电话逻辑
         return;
     } else if (isMusic === 1) {
-        if (phrase.indexOf('猜歌名') !== -1) {
+        if (phrase.indexOf('猜歌') !== -1) {
             toVoice('猜猜刚刚放了什么歌')
             isGuess = 1
         } else {
@@ -124,7 +125,6 @@ if (annyang) {
         console.log(phrases[0]);
         // phrases = [phrases];
         // audioControl()
-        document.getElementById('userSay').innerHTML = '您说了：' + phrases[0];
         reactTo(phrases[0]);
         // reactTo(phrase);
         // Todo: 加入返回值的逻辑
