@@ -9,6 +9,7 @@ let isMusic = 0
 let musicName
 var curStatus = 'pause';
 let isGuess = 0;
+
 function reactTo(phrase) {
     document.getElementById('userSay').innerHTML = '您说了：' + phrase
     if (isPhone === 1) {
@@ -33,11 +34,12 @@ function reactTo(phrase) {
         }
         isMusic = 0
     } else if (isGuess === 1) {
-        if (phrase === musicName) {
+        if (phrase.indexOf(musicName) !== -1) {
             toVoice('恭喜你猜对了')
         } else {
-            toVoice('很遗憾，你猜错了。正确答案是' + musicName)
+            toVoice('很遗憾，你猜错了。正确答案是《' + musicName + '》')
         }
+        isGuess = 0
     } else if (isSms === 1) {
         if (getSmsContent === 0) {
             smsContent = phrase;
@@ -84,17 +86,16 @@ function reactTo(phrase) {
     } else if (phrase.indexOf('听音乐') !== -1 || phrase.indexOf('来点音乐') !== -1) {
         randomMusic()
         isMusic = 1
-    }
-    else if (phrase.indexOf('报时') !== -1) {
+    } else if (phrase.indexOf('报时') !== -1) {
         var myDate = new Date();
         toVoice('现在是:' + myDate.getFullYear()
-                + '年' + (parseInt(myDate.getUTCMonth()) + 1) + '月' + myDate.getUTCDate() + '日'
-                + myDate.getHours() + '时' + myDate.getMinutes() + '分');
-    }
-    else {
+            + '年' + (parseInt(myDate.getUTCMonth()) + 1) + '月' + myDate.getUTCDate() + '日'
+            + myDate.getHours() + '时' + myDate.getMinutes() + '分');
+    } else {
         chat(phrase);
     }
 }
+
 if (annyang) {
 
     annyang.setLanguage('zh-CN');
@@ -111,7 +112,6 @@ if (annyang) {
         // console.log("录音器状态：", mediaRecorder.state);
         // changeColor();
     });
-
 
 
     annyang.addCallback('result', function (phrases) {
@@ -240,14 +240,13 @@ function changeColor() {
 }
 
 
-
 var i = 0;
 const constraints = {audio: true};
 
 function changeStatus() {
 
     try {
-        if (! annyang.isListening()) {
+        if (!annyang.isListening()) {
             annyang.resume();
             console.log('Ann yang started listening!');
             console.log(annyang.isListening());
