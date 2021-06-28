@@ -14,11 +14,13 @@ The reason why we developed such a voice assistant project is that we found our 
 
 - **Development Software:**
 
-  ​	**WebStorm** *2021.1.2(Professional Edition)*
+  ​	**WebStorm** *2020.3.3*
 
 - **Development Language:**
 
-  ``` Python 3.8.2```
+  ``` HTML```
+
+  ``` Javascript```
 
 - **Mainly Reference Count:**
 
@@ -42,22 +44,25 @@ The reason why we developed such a voice assistant project is that we found our 
 ```
  root folder  
       │
-      └───lib
-      │   
-      └───server
-      |   │───rest-server.py
-      |   │───imagenet
-      |   │───static
-      |   │───templates
-      |   │───database
-      |        │────tags
-      |              │────im2.jpg
-      |              │────im3.jpg
-      |              │──── ...
-      |        │────dataset
-      |              │────animals.txt
-      |              │────baby.txt
-      |              │──── ...
+      └───build
+      |   │───gulpfile.js
+      |   │───util.js
+      |
+      └───src
+      |   │───asr.js
+      |   │───index.partial.html
+      |   │───index.template.html
+      |   │───script.js
+      |   │───style.css
+      |        │────function
+      |              │────chat.js
+      |              │────randomMusic.js
+      | .gitignore
+      | license.txt
+      | package.json
+      | package-lock.json
+      | README.markdown
+      |
 ```
 
 
