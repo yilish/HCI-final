@@ -73,7 +73,7 @@ The reason why we developed such a voice assistant project is that we found our 
 
 Method 1：Direct access
 
-Web direct access：https://1850061.github.io/memory-manage/
+Web direct access：https://bigpearrrr.github.io/HCI-final/
 
 
 
