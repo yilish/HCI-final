@@ -9,21 +9,17 @@
 
 </head>
 <body class="run-animation">
-<!-- partial:index.partial.html -->
 <div id="world">
-
+	<input type="text" id="content" name="content" required
+		   minlength="4" maxlength="8" size="10" onchange="reactTo(this.value)" style="display: none">
 	<h1 id="response">Hello! How can I help?</h1>
 	<h2 id="userSay">Talk with me by saying "Hi,The shy"</h2>
 	<div id="listen"></div>
 </div>
-<!--<div class="app">-->
-<!--	<button class="record-btn" onclick="func()">录音</button>-->
-<!--	<audio controls="" class="audio-player" id="aud"></audio>-->
-<!--	<button onclick="seeBase64()">看看网页</button>-->
-<!--</div>-->
 
 <!-- My new preferred choice... this method doesn't need a <span>. Source: https://css-tricks.com/forums/topic/css-trick-for-a-horizontal-type-line-behind-text/#post-132492 -->
-<!-- partial -->
+
+
 <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r70/three.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.1/TweenMax.min.js'></script>
 <script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/264161/OrbitControls.js'></script>
@@ -33,7 +29,6 @@
 <script src="function/randomMusic.js"></script>
 <script src="function/chat.js"></script>
 <script src="asr.js"></script>
-<!--<script src="function/recorder.js"></script>-->
 
 </body>
 
